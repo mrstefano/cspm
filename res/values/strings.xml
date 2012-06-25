@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SoundProfileManagerv1</string>
+    <string name="sound_profile_button_label">Profile</string>
+    <string name="no_profiles">No profiles inserted</string>
+    <string name="menu_insert">New Profile</string>
+    
+    <string name="silent">Silent</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="normal">Normal</string>
+    <string name="loud">Loud</string>
+    
+    <string name="edit_title">Sound Profile Edit</string>
+    
+    <string name="edit_menu_apply_current_sound_settings">Apply current sound settings</string>
+    
+    <string name="edit_name">Name</string>
+    <string name="edit_icon_">Icon</string>
+    <string name="edit_icon_description">Icon</string>
+    <string name="edit_icon_low">Low</string>
+    <string name="edit_icon_normal">Normal</string>
+ 	<string name="edit_icon_loud">Loud</string>
+    <string name="edit_icon_vibrate">Vibrate</string>
+       
+    <string name="edit_dialog_icon_title">Pick an icon</string>
+    
+    <string name="edit_vibrate">Vibrate</string>
+    <string name="edit_ringer">Ringer</string>
+    <string name="edit_notification">Notification</string>
+    <string name="edit_alarm">Alarm</string>
+    <string name="edit_music">Music</string>
+    <string name="edit_system">System</string>
+    <string name="edit_voice_call">Voice Call</string>
+    
+    <string name="edit_save">Save</string>
+    <string name="edit_delete">Delete</string>
+    <string name="edit_reset">Reset</string>
+    
+    <string name="edit_validation_name_not_specified">Profile name not specified</string>
+    
+</resources>
