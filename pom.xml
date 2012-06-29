@@ -9,9 +9,15 @@
     <name>cspm</name>
 
     <properties>
-        <platform.version> 2.3.3
-            </platform.version>
-    </properties>
+        <platform.version>2.3.3</platform.version>
+        <license.addSvnKeyWords>false</license.addSvnKeyWords>
+        <license.project>cspm</license.project>
+        <license.projectName>Android Complete Sound Profile Manager</license.projectName>
+        <license.licenseName>gpl_v3</license.licenseName>
+<!--     	<license.licenseResolver>file://${basedir}/src/license</license.licenseResolver> -->
+    	<license.inceptionYear>2012</license.inceptionYear>
+    	<license.organizationName>MrStefano</license.organizationName>
+   	</properties>
 
     <dependencies>
         <dependency>
@@ -49,6 +55,31 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            
+			 <plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>license-maven-plugin</artifactId>
+			    <version>1.1</version>
+		        <configuration>
+		          <verbose>false</verbose>
+		          <addSvnKeyWords>true</addSvnKeyWords>
+		        </configuration>
+			    <executions>
+			        <execution>
+			            <id>first</id>
+			            <goals>
+			                <goal>update-file-header</goal>
+			            </goals>
+			            <phase>process-sources</phase>
+			            <configuration>
+			              <roots>
+			                <root>src/main/java</root>
+			                <root>src/test</root>
+			              </roots>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
         </plugins>
     </build>
 </project>
