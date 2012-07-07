@@ -1,5 +1,6 @@
 package org.mrstefano.cspm.activity;
 
+import org.mrstefano.cspm.R;
 import org.mrstefano.cspm.manager.DataManager;
 import org.mrstefano.cspm.manager.SoundProfileAudioManager;
 import org.mrstefano.cspm.model.IconListItem;
@@ -8,20 +9,20 @@ import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.StreamSettings;
 import org.mrstefano.cspm.view.EditStreamSettingsView;
 import org.mrstefano.cspm.view.adapter.IconListAdapter;
-import org.mrstefano.cspm.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ public class EditActivity extends Activity {
 
 	public static final String KEY_POSITION = "position";
 	public static final String KEY_SOUND_PROFILE = "sound_profile";
+	private static final int ACTIVITY_OPEN_RINGTONE_PICKER = 1;
 
 	private static final IconListItem ICON_LIST_ITEM_MUTE = new IconListItem(R.drawable.silent);
 	private static final IconListItem ICON_LIST_ITEM_VIBRATE = new IconListItem(R.drawable.vibrate);
@@ -52,6 +54,7 @@ public class EditActivity extends Activity {
 	private ImageView iconView;
 	private String iconName;
 	private ProfileValidator profileValidator;
+	private Integer currentStreamType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,7 @@ public class EditActivity extends Activity {
 				profile = new SoundProfile();
 				profile.name = nameText.getText().toString();
 				populateFields();
+				openRingtonePicker(StreamSettings.RINGER);
 			}
 		});
 		
@@ -141,7 +145,6 @@ public class EditActivity extends Activity {
 	    			IconListItem item = ICON_LIST_ITEMS[which];
 	    			iconView.setImageResource(item.iconId);
 	    			iconName = IconListAdapter.getIconName(item.iconId);
-	    			//Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
 	    	    }
 	    	});
 	    	dialog = builder.create();
@@ -187,9 +190,21 @@ public class EditActivity extends Activity {
 		return super.onMenuItemSelected(featureId, item);
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK && requestCode == ACTIVITY_OPEN_RINGTONE_PICKER) {
+          Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+          String ringtoneUri = uri != null ? uri.toString(): null;
+          StreamSettings streamSettings = this.profile.getStreamSettings(currentStreamType);
+          streamSettings.ringtoneUri = ringtoneUri;
+          EditStreamSettingsView editStreamSettingsView = streamSettingViews.get(currentStreamType);
+          editStreamSettingsView.apply(streamSettings);
+	  }
+	}
+	
 	private void applyCurrentSystemProfile() {
 		SoundProfile currentProfile = extractProfileFromView();
-		SoundProfile systemProfile = audioManager.extractSystemProfile();
+		SoundProfile systemProfile = audioManager.extractProfileFromCurrentSystemSettings();
 		if ( currentProfile != null ) {
 			systemProfile.name = currentProfile.name;
 		}
@@ -200,36 +215,13 @@ public class EditActivity extends Activity {
 	private void initStreamControls() {
 		streamSettingViews = new SparseArray<EditStreamSettingsView>();
 		LinearLayout streamControlsContainer = (LinearLayout) findViewById(R.id.stream_controls_container);
-		for (int streamType : StreamSettings.STREAM_TYPES) {
-			int titleResId;
-			boolean vibrateCheckBoxVisible = false;
-			switch (streamType) {
-			case StreamSettings.RINGER:
-				titleResId = R.string.edit_ringer;
-				vibrateCheckBoxVisible = true;
-				break;
-			case StreamSettings.NOTIFICATION:
-				titleResId = R.string.edit_notification;
-				vibrateCheckBoxVisible = true;
-				break;
-			case StreamSettings.ALARM:
-				titleResId = R.string.edit_alarm;
-				break;
-			case StreamSettings.MUSIC:
-				titleResId = R.string.edit_music;
-				break;
-			case StreamSettings.SYSTEM:
-				titleResId = R.string.edit_system;
-				break;
-			case StreamSettings.VOICE_CALL:
-				titleResId = R.string.edit_voice_call;
-				break;
-			default:
-				continue;
-			}
-			EditStreamSettingsView streamSettingsView = new EditStreamSettingsView(this);
-			streamSettingsView.titleTextView.setText(titleResId);
-			streamSettingsView.vibrateCheckBox.setVisibility(vibrateCheckBoxVisible ? CheckBox.VISIBLE: CheckBox.INVISIBLE);
+		for (final int streamType : StreamSettings.STREAM_TYPES) {
+			EditStreamSettingsView streamSettingsView = new EditStreamSettingsView(this, streamType);
+			streamSettingsView.selectRingtoneButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View view) {
+					openRingtonePicker(streamType);
+				}
+			});
 			streamSettingViews.put(streamType, streamSettingsView);
 			streamControlsContainer.addView(streamSettingsView);
 		}
@@ -277,6 +269,31 @@ public class EditActivity extends Activity {
         populateFields();
     }
     
+	public void openRingtonePicker(int streamType) {
+		Intent i = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+		String title = getString(R.string.edit_select_ringtone_popup_title);
+		i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, title );
+		i.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
+		int ringtoneType;
+		switch(streamType) {
+		case StreamSettings.RINGER:
+			ringtoneType = RingtoneManager.TYPE_RINGTONE;
+			break;
+		case StreamSettings.NOTIFICATION:
+			ringtoneType = RingtoneManager.TYPE_NOTIFICATION;
+			break;
+		case StreamSettings.ALARM:
+			ringtoneType = RingtoneManager.TYPE_ALARM;
+			break;
+		default:
+			ringtoneType = RingtoneManager.TYPE_ALL;
+		}
+		i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, ringtoneType);
+		currentStreamType = streamType;
+		this.startActivityForResult(i, ACTIVITY_OPEN_RINGTONE_PICKER);
+	}
+	
+
     private void saveState() {
     	SoundProfile currentProfile = extractProfileFromView();
     	Intent intent = getIntent();

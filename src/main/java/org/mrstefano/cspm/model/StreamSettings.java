@@ -3,6 +3,7 @@ package org.mrstefano.cspm.model;
 import java.io.Serializable;
 
 import android.media.AudioManager;
+import android.net.Uri;
 
 public class StreamSettings implements Serializable {
 	
@@ -18,26 +19,36 @@ public class StreamSettings implements Serializable {
 	
 	public int volume;
 	public boolean vibrate;
+	public String ringtoneUri;
 	
 	public StreamSettings() {
-		super();
 	}
 
 	public StreamSettings(int volume) {
-		super();
 		this.volume = volume;
 	}
 
 	public StreamSettings(int volume, boolean vibrate) {
-		super();
-		this.volume = volume;
+		this(volume);
 		this.vibrate = vibrate;
+	}
+
+	public StreamSettings(int volume, boolean vibrate, String ringtoneUri) {
+		this(volume, vibrate);
+		this.vibrate = vibrate;
+		this.ringtoneUri = ringtoneUri;
+	}
+
+	public StreamSettings(int volume, boolean vibrate, Uri ringtoneUri) {
+		this(volume, vibrate, ringtoneUri != null ? ringtoneUri.toString(): null);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((ringtoneUri == null) ? 0 : ringtoneUri.hashCode());
 		result = prime * result + (vibrate ? 1231 : 1237);
 		result = prime * result + volume;
 		return result;
@@ -52,11 +63,17 @@ public class StreamSettings implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		StreamSettings other = (StreamSettings) obj;
+		if (ringtoneUri == null) {
+			if (other.ringtoneUri != null)
+				return false;
+		} else if (!ringtoneUri.equals(other.ringtoneUri))
+			return false;
 		if (vibrate != other.vibrate)
 			return false;
 		if (volume != other.volume)
 			return false;
 		return true;
 	}
+
 	
 }

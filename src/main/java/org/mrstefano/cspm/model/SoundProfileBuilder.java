@@ -4,6 +4,8 @@ import org.mrstefano.cspm.R;
 import org.mrstefano.cspm.view.adapter.IconListAdapter;
 
 import android.content.Context;
+import android.media.RingtoneManager;
+import android.net.Uri;
 
 public class SoundProfileBuilder {
 
@@ -35,14 +37,22 @@ public class SoundProfileBuilder {
 		}
 		profile.icon = icon;
 		StreamSettings streamSettings;
+		Uri ringtoneUri;
 		for (Integer streamType : StreamSettings.STREAM_TYPES) {
 			switch ( streamType ) {
-			case StreamSettings.VOICE_CALL:
-				streamSettings = new StreamSettings(Math.max(volume, 80), false);
+			case StreamSettings.RINGER:
+				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
+				break;
+			case StreamSettings.NOTIFICATION:
+				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+				break;
+			case StreamSettings.ALARM:
+				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM);
 				break;
 			default:
-				streamSettings = new StreamSettings(volume, vibrate);
+				ringtoneUri = null;
 			}
+			streamSettings = new StreamSettings(volume, vibrate, ringtoneUri);
 			profile.putStreamSetting(streamType, streamSettings);
 		}
 		return profile;

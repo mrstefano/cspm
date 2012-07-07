@@ -65,19 +65,19 @@
 		          <addSvnKeyWords>true</addSvnKeyWords>
 		        </configuration>
 			    <executions>
-			        <execution>
-			            <id>first</id>
-			            <goals>
-			                <goal>update-file-header</goal>
-			            </goals>
-			            <phase>process-sources</phase>
-			            <configuration>
-			              <roots>
-			                <root>src/main/java</root>
-			                <root>src/test</root>
-			              </roots>
-			            </configuration>
-			        </execution>
+<!-- 			        <execution> -->
+<!-- 			            <id>first</id> -->
+<!-- 			            <goals> -->
+<!-- 			                <goal>update-file-header</goal> -->
+<!-- 			            </goals> -->
+<!-- 			            <phase>process-sources</phase> -->
+<!-- 			            <configuration> -->
+<!-- 			              <roots> -->
+<!-- 			                <root>src/main/java</root> -->
+<!-- 			                <root>src/test</root> -->
+<!-- 			              </roots> -->
+<!-- 			            </configuration> -->
+<!-- 			        </execution> -->
 			    </executions>
 			</plugin>
         </plugins>

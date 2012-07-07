@@ -25,16 +25,17 @@ public class SelectActivity extends ListActivity {
 	private static final int ACTIVITY_CREATE=0;
 	private static final int ACTIVITY_EDIT=1;
 
-	private static final int INSERT_ID = Menu.FIRST;
+	private static final int INSERT_ID = 1;
+	private static final int RESET_DATA_ID = 2;
 
 	private DataManager dataManager;
-	private SoundProfileAudioManager soundProfileApplier;
+	private SoundProfileAudioManager soundProfileManager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataManager = DataManager.getInstance(this);
-		soundProfileApplier = new SoundProfileAudioManager(this);
+		soundProfileManager = new SoundProfileAudioManager(this);
 		
 		setContentView(R.layout.profiles_list);
 		ListView lv = getListView();
@@ -53,13 +54,14 @@ public class SelectActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		dataManager.selectProfile(position);
 		SoundProfile profile = dataManager.loadProfile(position);
-		soundProfileApplier.applyProfile(profile);
+		soundProfileManager.applyProfile(profile);
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, INSERT_ID, 0, R.string.menu_insert);
+		menu.add(0, RESET_DATA_ID, 1, R.string.menu_reset_data);
 		return true;
 	}
 
@@ -69,8 +71,12 @@ public class SelectActivity extends ListActivity {
 		case INSERT_ID:
 			createProfile();
 			return true;
+		case RESET_DATA_ID:
+			resetData();
+			return true;
+		default:
+			return super.onMenuItemSelected(featureId, item);
 		}
-		return super.onMenuItemSelected(featureId, item);
 	}
 
 	private void createProfile() {
@@ -78,6 +84,11 @@ public class SelectActivity extends ListActivity {
 		SoundProfile profile = SoundProfileBuilder.buildDefaultProfile(this);
 		i.putExtra(EditActivity.KEY_SOUND_PROFILE, profile);
 		startActivityForResult(i, ACTIVITY_CREATE);
+	}
+
+	private void resetData() {
+		dataManager.resetData();
+		populateView();
 	}
 
 	private void editItem(int position) {
@@ -133,7 +144,7 @@ public class SelectActivity extends ListActivity {
 		if ( selectedProfileIndex != null ) {
 			listView.setItemChecked(selectedProfileIndex, true);
 			SoundProfile selectedProfile = data.getSelectedProfile();
-			soundProfileApplier.applyProfile(selectedProfile);
+			soundProfileManager.applyProfile(selectedProfile);
 		}
 	}
 

@@ -1,11 +1,15 @@
 package org.mrstefano.cspm.view;
 
-import org.mrstefano.cspm.model.StreamSettings;
 import org.mrstefano.cspm.R;
+import org.mrstefano.cspm.model.StreamSettings;
 
 import android.content.Context;
-import android.util.AttributeSet;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -16,14 +20,17 @@ public class EditStreamSettingsView extends LinearLayout {
 	public TextView titleTextView;
 	public SeekBar volumeSeekBar;
 	public CheckBox vibrateCheckBox;
+	public Button selectRingtoneButton;
+	private int streamType;
 
 	public EditStreamSettingsView(Context context) {
 		super(context);
 		init();
 	}
 
-	public EditStreamSettingsView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+	public EditStreamSettingsView(Context context, int streamType) {
+		super(context);
+		this.streamType = streamType;
 		init();
 	}
 	
@@ -33,6 +40,46 @@ public class EditStreamSettingsView extends LinearLayout {
 		titleTextView = (TextView) findViewById(R.id.settings_title_text);
 		volumeSeekBar = (SeekBar) findViewById(R.id.volume_sb);
 		vibrateCheckBox = (CheckBox) findViewById(R.id.vibrate_cb);
+		selectRingtoneButton = (Button) findViewById(R.id.select_ringtone_btn);
+		
+		int titleResId;
+		boolean vibrateCheckBoxVisible = false, selectableRingtone = false;
+		switch (streamType) {
+		case StreamSettings.RINGER:
+			titleResId = R.string.edit_ringer;
+			vibrateCheckBoxVisible = true;
+			selectableRingtone = true;
+			break;
+		case StreamSettings.NOTIFICATION:
+			titleResId = R.string.edit_notification;
+			vibrateCheckBoxVisible = true;
+			selectableRingtone = true;
+			break;
+		case StreamSettings.ALARM:
+			titleResId = R.string.edit_alarm;
+			selectableRingtone = true;
+			break;
+		case StreamSettings.MUSIC:
+			titleResId = R.string.edit_music;
+			break;
+		case StreamSettings.SYSTEM:
+			titleResId = R.string.edit_system;
+			break;
+		case StreamSettings.VOICE_CALL:
+			titleResId = R.string.edit_voice_call;
+			break;
+		default:
+			return;
+		}
+		titleTextView.setText(titleResId);
+		if ( vibrateCheckBoxVisible ) { 
+			vibrateCheckBox.setVisibility(View.VISIBLE);
+			vibrateCheckBox.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		} else {
+			vibrateCheckBox.setVisibility(View.INVISIBLE);
+			vibrateCheckBox.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+		}
+		selectRingtoneButton.setVisibility(selectableRingtone ? View.VISIBLE: View.INVISIBLE);
 	}
 	
 	public void apply(StreamSettings streamSettings) {
@@ -40,6 +87,24 @@ public class EditStreamSettingsView extends LinearLayout {
 		if ( vibrateCheckBox != null ) {
 			vibrateCheckBox.setChecked(streamSettings.vibrate);
 		}
+		String ringtoneTitle = getRingtoneTitle(streamSettings.ringtoneUri);
+		if (ringtoneTitle == null ) {
+			//TODO
+			ringtoneTitle = getContext().getString(R.string.edit_no_ringtone_selected);
+		}
+		selectRingtoneButton.setText(ringtoneTitle);
+	}
+
+	private String getRingtoneTitle(String ringtoneUriStr) {
+		if ( ringtoneUriStr != null ) {
+			Uri uri = Uri.parse(ringtoneUriStr);
+			Ringtone ringtone = RingtoneManager.getRingtone(getContext(), uri);
+			if ( ringtone != null ) {
+				String title = ringtone.getTitle(getContext());
+				return title;
+			}
+		}
+		return null;
 	}
 	
 	public void reset() {

@@ -5,6 +5,7 @@
     <string name="sound_profile_button_label">Profile</string>
     <string name="no_profiles">No profiles inserted</string>
     <string name="menu_insert">New Profile</string>
+    <string name="menu_reset_data">Reset Data</string>
     
     <string name="silent">Silent</string>
     <string name="vibrate">Vibrate</string>
@@ -39,4 +40,7 @@
     
     <string name="edit_validation_name_not_specified">Profile name not specified</string>
     
+    <string name="edit_no_ringtone_selected">No Ringtone Selected</string>
+    <string name="edit_select_ringtone">Ringtone</string>
+    <string name="edit_select_ringtone_popup_title">Select tone</string>
 </resources>

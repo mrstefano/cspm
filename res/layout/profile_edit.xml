@@ -38,7 +38,8 @@
             android:id="@+id/stream_controls_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="50sp"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
             android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>

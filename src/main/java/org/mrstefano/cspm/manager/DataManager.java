@@ -38,19 +38,24 @@ public class DataManager {
 		initData();
 	}
 	
-	private void initData() {
+	protected void initData() {
 		try {
 			data = readDataFile();
 		} catch (Exception e) {
 			Log.w(getClass().getSimpleName(), "Error reading data file", e);
 		}
 		if ( data == null ) {
-			data = new SoundProfilesData();
-			data.addProfile(SoundProfileBuilder.buildSilentProfile(context));
-			data.addProfile(SoundProfileBuilder.buildVibrateProfile(context));
-			data.addProfile(SoundProfileBuilder.buildNormalProfile(context));
-			data.addProfile(SoundProfileBuilder.buildLoudProfile(context));
+			initDefaultData();
 		}
+	}
+
+	private void initDefaultData() {
+		data = new SoundProfilesData();
+		data.addProfile(SoundProfileBuilder.buildSilentProfile(context));
+		data.addProfile(SoundProfileBuilder.buildVibrateProfile(context));
+		data.addProfile(SoundProfileBuilder.buildNormalProfile(context));
+		data.addProfile(SoundProfileBuilder.buildLoudProfile(context));
+		saveData();
 	}
 
 	public SoundProfilesData loadData() {
@@ -98,6 +103,10 @@ public class DataManager {
 			}
 		}
 		return false;
+	}
+	
+	public void resetData() {
+		initDefaultData();
 	}
 	
 	private SoundProfilesData readDataFile() throws Exception {
