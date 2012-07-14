@@ -62,6 +62,13 @@ public class DataManager {
 		return data;
 	}
 	
+	public SoundProfile getSelectedProfile() {
+		if ( data == null ) {
+			initData();
+		}
+		return data.getSelectedProfile();
+	}
+	
 	public SoundProfile loadProfile(int position) {
 		return data.getProfile(position);
 	}

@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="4"
-        android:targetSdkVersion="10" />
+        android:targetSdkVersion="4" />
 
     <application
         android:debuggable="true"
@@ -24,7 +24,7 @@
         <activity android:name=".activity.EditActivity" >
         </activity>
 
-        <receiver android:name="CompleteSoundProfileManagerAppWidgetProvider" >
+        <receiver android:name="CSPMAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

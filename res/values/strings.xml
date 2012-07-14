@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SoundProfileManagerv1</string>
+    <string name="app_name">Sound Profile Made Easy</string>
     <string name="sound_profile_button_label">Profile</string>
     <string name="no_profiles">No profiles inserted</string>
+    <string name="no_profile_selected">No profile selected</string>
+    
+    <string name="widget_icon_description">Profile Icon</string>
+    
     <string name="menu_insert">New Profile</string>
     <string name="menu_reset_data">Reset Data</string>
     

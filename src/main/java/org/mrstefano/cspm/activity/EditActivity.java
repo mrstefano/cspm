@@ -1,5 +1,6 @@
 package org.mrstefano.cspm.activity;
 
+import org.mrstefano.cspm.CSPMAppWidgetProvider;
 import org.mrstefano.cspm.R;
 import org.mrstefano.cspm.manager.DataManager;
 import org.mrstefano.cspm.manager.SoundProfileAudioManager;
@@ -261,6 +262,7 @@ public class EditActivity extends Activity {
     protected void onPause() {
         super.onPause();
         saveState();
+        CSPMAppWidgetProvider.updateAllWidgets(this);
     }
     
     @Override

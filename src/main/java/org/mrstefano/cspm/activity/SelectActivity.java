@@ -9,6 +9,7 @@ import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.SoundProfileBuilder;
 import org.mrstefano.cspm.model.SoundProfilesData;
 import org.mrstefano.cspm.view.adapter.IconListAdapter;
+import org.mrstefano.cspm.CSPMAppWidgetProvider;
 import org.mrstefano.cspm.R;
 
 import android.app.ListActivity;
@@ -115,6 +116,7 @@ public class SelectActivity extends ListActivity {
     protected void onPause() {
         super.onPause();
         saveState();
+        CSPMAppWidgetProvider.updateAllWidgets(this);
     }
     
     @Override
