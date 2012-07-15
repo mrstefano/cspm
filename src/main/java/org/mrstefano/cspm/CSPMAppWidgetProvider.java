@@ -39,7 +39,7 @@ public class CSPMAppWidgetProvider extends AppWidgetProvider {
 		for (int i=0; i<N; i++) {
 			int appWidgetId = ids[i];
 
-			RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_provider_layout);
+			RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
 			Intent intent = new Intent(context, SelectActivity.class);
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);

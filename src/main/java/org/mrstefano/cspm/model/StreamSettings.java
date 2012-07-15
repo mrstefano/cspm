@@ -15,7 +15,7 @@ public class StreamSettings implements Serializable {
 	public static final int SYSTEM = AudioManager.STREAM_SYSTEM;
 	public static final int MUSIC = AudioManager.STREAM_MUSIC;
 	public static final int VOICE_CALL = AudioManager.STREAM_VOICE_CALL;
-	public static final int[] STREAM_TYPES = {RINGER, NOTIFICATION, ALARM, SYSTEM, MUSIC};
+	public static final int[] STREAM_TYPES = {RINGER, NOTIFICATION, ALARM, SYSTEM, MUSIC, VOICE_CALL};
 	
 	public int volume;
 	public boolean vibrate;

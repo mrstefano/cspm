@@ -30,8 +30,8 @@ import android.widget.LinearLayout;
 
 public class EditActivity extends Activity {
 
-	public static final String KEY_POSITION = "position";
-	public static final String KEY_SOUND_PROFILE = "sound_profile";
+	public static final String KEY_PROFILE_INDEX = "profile_index";
+	public static final String KEY_PROFILE = "profile";
 	private static final int ACTIVITY_OPEN_RINGTONE_PICKER = 1;
 
 	private static final IconListItem ICON_LIST_ITEM_MUTE = new IconListItem(R.drawable.silent);
@@ -47,7 +47,7 @@ public class EditActivity extends Activity {
 
 	private SparseArray<EditStreamSettingsView> streamSettingViews;
 	
-	private Integer position;
+	private Integer index;
 	private SoundProfile profile;
 	private DataManager dataManager;
 	private SoundProfileAudioManager audioManager;
@@ -93,10 +93,10 @@ public class EditActivity extends Activity {
 				trimProfileName();
 				SoundProfile profile = extractProfileFromView();
 				if ( profileValidator.validate(profile) ) {
-			        if (position == null) {
-						position = dataManager.addProfile(profile);
+			        if (index == null) {
+						index = dataManager.addProfile(profile);
 			        } else {
-			            dataManager.updateProfile(profile, position);
+			            dataManager.updateProfile(profile, index);
 			        }
 					setResult(RESULT_OK);
 					finish();
@@ -117,8 +117,8 @@ public class EditActivity extends Activity {
 		Button deleteButton = (Button) findViewById(R.id.delete);
 		deleteButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				if (position != null) {
-					dataManager.deleteProfile(position);
+				if (index != null) {
+					dataManager.deleteProfile(index);
 				}
 				setResult(RESULT_OK);
 				finish();
@@ -157,19 +157,19 @@ public class EditActivity extends Activity {
 	}
 
 	private void loadState(Bundle bundle) {
-		position = null;
+		index = null;
 		profile = null;
 		if ( bundle == null ) {
 			bundle = getIntent().getExtras();
 		}
 		if ( bundle != null ) {
-			position = bundle.getInt(EditActivity.KEY_POSITION, -1);
-			if ( position == -1 ) {
-				position = null;
+			index = bundle.getInt(EditActivity.KEY_PROFILE_INDEX, -1);
+			if ( index == -1 ) {
+				index = null;
 			}
-			profile = (SoundProfile) bundle.getSerializable(EditActivity.KEY_SOUND_PROFILE);
-			if ( position != null && profile == null ) {
-				profile = dataManager.loadProfile(position);
+			profile = (SoundProfile) bundle.getSerializable(EditActivity.KEY_PROFILE);
+			if ( index != null && profile == null ) {
+				profile = dataManager.loadProfile(index);
 			}
 		}
 	}
@@ -254,8 +254,8 @@ public class EditActivity extends Activity {
         super.onSaveInstanceState(outState);
         saveState();
         SoundProfile currentProfile = extractProfileFromView();
-       	outState.putInt(EditActivity.KEY_POSITION, position);
-       	outState.putSerializable(EditActivity.KEY_SOUND_PROFILE, currentProfile);
+       	outState.putInt(EditActivity.KEY_PROFILE_INDEX, index);
+       	outState.putSerializable(EditActivity.KEY_PROFILE, currentProfile);
     }
 	
     @Override
@@ -299,10 +299,10 @@ public class EditActivity extends Activity {
     private void saveState() {
     	SoundProfile currentProfile = extractProfileFromView();
     	Intent intent = getIntent();
-    	if ( position != null ) {
-    		intent.putExtra(KEY_POSITION, position);
+    	if ( index != null ) {
+    		intent.putExtra(KEY_PROFILE_INDEX, index);
     	}
-    	intent.putExtra(KEY_SOUND_PROFILE, currentProfile);
+    	intent.putExtra(KEY_PROFILE, currentProfile);
     }
     
 	private SoundProfile extractProfileFromView() {

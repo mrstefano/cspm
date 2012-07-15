@@ -41,8 +41,8 @@ public class SoundProfilesData implements Serializable {
 		}
 	}
 
-	public SoundProfile getProfile(int position) {
-		return profiles.get(position);
+	public SoundProfile getProfile(int index) {
+		return profiles.get(index);
 	}
 
 	public Integer getSelectedProfileIndex() {
@@ -61,12 +61,12 @@ public class SoundProfilesData implements Serializable {
 		this.profiles = profiles;
 	}
 
-	public void setProfile(Integer position, SoundProfile profile) {
-		this.profiles.set(position, profile);
+	public void setProfile(Integer index, SoundProfile profile) {
+		this.profiles.set(index, profile);
 	}
 
-	public void removeProfile(int position) {
-		this.profiles.remove(position);
+	public void removeProfile(int index) {
+		this.profiles.remove(index);
 	}
 
 }

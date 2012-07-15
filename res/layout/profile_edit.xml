@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent"
+    android:background="@drawable/general_background"
+    android:orientation="vertical"
+    tools:ignore="NestedWeights" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/iconView"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:contentDescription="@string/edit_icon_description"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,13 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="text" />
-
-        <ImageView
-            android:id="@+id/iconView"
-            android:layout_width="30sp"
-            android:layout_height="30sp"
-            android:scaleType="fitCenter"
-            android:contentDescription="@string/edit_icon_description" />
     </LinearLayout>
 
     <ScrollView
@@ -38,9 +41,9 @@
             android:id="@+id/stream_controls_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingLeft="2sp"
-            android:paddingRight="2sp"
-            android:orientation="vertical" >
+            android:paddingRight="2sp" >
         </LinearLayout>
     </ScrollView>
 

@@ -37,7 +37,8 @@ public class SoundProfileBuilder {
 		}
 		profile.icon = icon;
 		StreamSettings streamSettings;
-		Uri ringtoneUri;
+		Uri ringtoneUri = null;
+		int finalVolume = volume;
 		for (Integer streamType : StreamSettings.STREAM_TYPES) {
 			switch ( streamType ) {
 			case StreamSettings.RINGER:
@@ -49,10 +50,11 @@ public class SoundProfileBuilder {
 			case StreamSettings.ALARM:
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM);
 				break;
-			default:
-				ringtoneUri = null;
+			case StreamSettings.VOICE_CALL:
+				finalVolume = 80;
+				break;
 			}
-			streamSettings = new StreamSettings(volume, vibrate, ringtoneUri);
+			streamSettings = new StreamSettings(finalVolume, vibrate, ringtoneUri);
 			profile.putStreamSetting(streamType, streamSettings);
 		}
 		return profile;

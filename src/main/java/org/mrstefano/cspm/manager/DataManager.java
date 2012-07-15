@@ -69,12 +69,12 @@ public class DataManager {
 		return data.getSelectedProfile();
 	}
 	
-	public SoundProfile loadProfile(int position) {
-		return data.getProfile(position);
+	public SoundProfile loadProfile(int index) {
+		return data.getProfile(index);
 	}
 	
-	public void selectProfile(Integer position) {
-		data.setSelectedProfileIndex(position);
+	public void selectProfile(Integer index) {
+		data.setSelectedProfileIndex(index);
 	}
 	
 	public int addProfile(SoundProfile profile) {

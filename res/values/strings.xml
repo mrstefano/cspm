@@ -5,6 +5,8 @@
     <string name="sound_profile_button_label">Profile</string>
     <string name="no_profiles">No profiles inserted</string>
     <string name="no_profile_selected">No profile selected</string>
+    <string name="profiles_list_header">Long press to edit profile</string>
+    <string name="profiles_list_footer">Press menu button for more options</string>
     
     <string name="widget_icon_description">Profile Icon</string>
     

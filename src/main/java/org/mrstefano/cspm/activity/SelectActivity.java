@@ -2,6 +2,8 @@ package org.mrstefano.cspm.activity;
 
 import java.util.List;
 
+import org.mrstefano.cspm.CSPMAppWidgetProvider;
+import org.mrstefano.cspm.R;
 import org.mrstefano.cspm.manager.DataManager;
 import org.mrstefano.cspm.manager.SoundProfileAudioManager;
 import org.mrstefano.cspm.model.IconListItem;
@@ -9,12 +11,11 @@ import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.SoundProfileBuilder;
 import org.mrstefano.cspm.model.SoundProfilesData;
 import org.mrstefano.cspm.view.adapter.IconListAdapter;
-import org.mrstefano.cspm.CSPMAppWidgetProvider;
-import org.mrstefano.cspm.R;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,18 +44,26 @@ public class SelectActivity extends ListActivity {
 		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 		    @Override
 		    public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) {
-		        editItem(pos);
+		    	int index = pos - 1;
+		        editItem(index);
 		        return false;
 		    }
 		});
+		LayoutInflater inflater = getLayoutInflater();
+		View headerView = inflater.inflate( R.layout.profiles_list_header, null );
+		lv.addHeaderView(headerView, null, false);
+		View footerView = inflater.inflate( R.layout.profiles_list_footer, null );
+		lv.addFooterView(footerView, null, false);
+
 		populateView();
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		dataManager.selectProfile(position);
-		SoundProfile profile = dataManager.loadProfile(position);
+		int index = position - 1;
+		dataManager.selectProfile(index);
+		SoundProfile profile = dataManager.loadProfile(index);
 		soundProfileManager.applyProfile(profile);
 	}
 	
@@ -83,7 +92,7 @@ public class SelectActivity extends ListActivity {
 	private void createProfile() {
 		Intent i = new Intent(this, EditActivity.class);
 		SoundProfile profile = SoundProfileBuilder.buildDefaultProfile(this);
-		i.putExtra(EditActivity.KEY_SOUND_PROFILE, profile);
+		i.putExtra(EditActivity.KEY_PROFILE, profile);
 		startActivityForResult(i, ACTIVITY_CREATE);
 	}
 
@@ -92,11 +101,11 @@ public class SelectActivity extends ListActivity {
 		populateView();
 	}
 
-	private void editItem(int position) {
+	private void editItem(int index) {
 		Intent i = new Intent(this, EditActivity.class);
-		SoundProfile profile = dataManager.loadProfile(position);
-		i.putExtra(EditActivity.KEY_POSITION, position);
-		i.putExtra(EditActivity.KEY_SOUND_PROFILE, profile);
+		SoundProfile profile = dataManager.loadProfile(index);
+		i.putExtra(EditActivity.KEY_PROFILE_INDEX, index);
+		i.putExtra(EditActivity.KEY_PROFILE, profile);
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
 	
@@ -144,7 +153,7 @@ public class SelectActivity extends ListActivity {
 		ListView listView = getListView();
 		Integer selectedProfileIndex = data.getSelectedProfileIndex();
 		if ( selectedProfileIndex != null ) {
-			listView.setItemChecked(selectedProfileIndex, true);
+			listView.setItemChecked(selectedProfileIndex + 1, true);
 			SoundProfile selectedProfile = data.getSelectedProfile();
 			soundProfileManager.applyProfile(selectedProfile);
 		}
