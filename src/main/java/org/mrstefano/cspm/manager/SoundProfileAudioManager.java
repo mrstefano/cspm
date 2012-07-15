@@ -2,6 +2,7 @@ package org.mrstefano.cspm.manager;
 
 import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.StreamSettings;
+import org.mrstefano.cspm.model.StreamSettings.Type;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -24,7 +25,8 @@ public class SoundProfileAudioManager {
 	public void applyProfile(SoundProfile profile) {
 		int ringerMode = profile.getRingerMode();
 		audioManager.setRingerMode(ringerMode);
-    	for (int streamType : StreamSettings.STREAM_TYPES) {
+		Type[] types = Type.values();
+		for (Type streamType : types) {
 			StreamSettings streamSettings = profile.getStreamSettings(streamType);
 			if ( streamSettings != null ) {
 				applyStreamSetting(streamType, streamSettings, 0);
@@ -35,22 +37,24 @@ public class SoundProfileAudioManager {
 	
 	public SoundProfile extractProfileFromCurrentSystemSettings() {
 		SoundProfile profile = new SoundProfile();
-		for (int streamType : StreamSettings.STREAM_TYPES) {
-			int maxVol = audioManager.getStreamMaxVolume(streamType);
-			int vol = audioManager.getStreamVolume(streamType);
+		Type[] types = StreamSettings.Type.values();
+		for (Type streamType : types) {
+			int audioManagerStreamType = getAudioManagerStreamType(streamType);
+			int maxVol = audioManager.getStreamMaxVolume(audioManagerStreamType);
+			int vol = audioManager.getStreamVolume(audioManagerStreamType);
 			int volPercent = ( (Double) (Math.floor(vol * 100 / maxVol)) ).intValue();
 			int vibrateSettings;
 			Uri ringtoneUri;
 			switch ( streamType ) {
-			case StreamSettings.RINGER:
+			case RINGER:
 				vibrateSettings = audioManager.getVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER);
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
 				break;
-			case StreamSettings.NOTIFICATION:
+			case NOTIFICATION:
 				vibrateSettings = audioManager.getVibrateSetting(AudioManager.VIBRATE_TYPE_NOTIFICATION);
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
 				break;
-			case StreamSettings.ALARM:
+			case ALARM:
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM);
 				vibrateSettings = AudioManager.VIBRATE_SETTING_OFF;
 				break;
@@ -70,23 +74,43 @@ public class SoundProfileAudioManager {
 		return profile;
 	}
 	
-	private void applyStreamSetting(int streamType, StreamSettings streamSettings, int flags) {
-		int maxVolume = audioManager.getStreamMaxVolume(streamType);
+	private void applyStreamSetting(Type streamType, StreamSettings streamSettings, int flags) {
+		int audioManagerStreamType = getAudioManagerStreamType(streamType);
+		int maxVolume = audioManager.getStreamMaxVolume(audioManagerStreamType);
 		double vol = Math.ceil(maxVolume * streamSettings.volume / 100);
-		audioManager.setStreamVolume(streamType, Double.valueOf(vol).intValue(), flags);
+		audioManager.setStreamVolume(audioManagerStreamType, Double.valueOf(vol).intValue(), flags);
 		Uri ringtoneUri = parseUri(streamSettings.ringtoneUri);
 		switch ( streamType ) {
-		case StreamSettings.RINGER:
+		case RINGER:
 			toggleVibrate(AudioManager.VIBRATE_TYPE_RINGER, streamSettings.vibrate);
 			applyRingtone(RingtoneManager.TYPE_RINGTONE, ringtoneUri);
 			break;
-		case StreamSettings.NOTIFICATION:
+		case NOTIFICATION:
 			toggleVibrate(AudioManager.VIBRATE_TYPE_NOTIFICATION, streamSettings.vibrate);
 			applyRingtone(RingtoneManager.TYPE_NOTIFICATION, ringtoneUri);
 			break;
-		case StreamSettings.ALARM:
+		case ALARM:
 			applyRingtone(RingtoneManager.TYPE_ALARM, ringtoneUri);
 			break;
+		}
+	}
+	
+	protected int getAudioManagerStreamType(Type streamType) {
+		switch(streamType) {
+		case RINGER:
+			return AudioManager.STREAM_RING;
+		case NOTIFICATION:
+			return AudioManager.STREAM_NOTIFICATION;
+		case ALARM:
+			return AudioManager.STREAM_ALARM;
+		case MUSIC:
+			return AudioManager.STREAM_MUSIC;
+		case SYSTEM:
+			return AudioManager.STREAM_SYSTEM;
+		case VOICE_CALL:
+			return AudioManager.STREAM_VOICE_CALL;
+		default:
+			return -1;
 		}
 	}
     

@@ -2,21 +2,37 @@ package org.mrstefano.cspm.model;
 
 import java.io.Serializable;
 
-import android.media.AudioManager;
 import android.net.Uri;
 
 public class StreamSettings implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final int RINGER = AudioManager.STREAM_RING;
-	public static final int NOTIFICATION = AudioManager.STREAM_NOTIFICATION;
-	public static final int ALARM = AudioManager.STREAM_ALARM;
-	public static final int SYSTEM = AudioManager.STREAM_SYSTEM;
-	public static final int MUSIC = AudioManager.STREAM_MUSIC;
-	public static final int VOICE_CALL = AudioManager.STREAM_VOICE_CALL;
-	public static final int[] STREAM_TYPES = {RINGER, NOTIFICATION, ALARM, SYSTEM, MUSIC, VOICE_CALL};
-	
+	public enum Type {
+		RINGER(1), NOTIFICATION(2), ALARM(3), SYSTEM(4), MUSIC(5), VOICE_CALL(6);
+		
+		private int code;
+
+		private Type(int code) {
+			this.code = code;
+		}
+		
+		public int getCode() {
+			return code;
+		}
+
+		public static Type valueOf(int code) {
+			Type[] values = values();
+			for (Type type : values) {
+				if ( type.getCode() == code ) {
+					return type;
+				}
+			}
+			return null;
+		}
+		
+	}
+
 	public int volume;
 	public boolean vibrate;
 	public String ringtoneUri;

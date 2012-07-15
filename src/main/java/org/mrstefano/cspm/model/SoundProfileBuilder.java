@@ -1,6 +1,7 @@
 package org.mrstefano.cspm.model;
 
 import org.mrstefano.cspm.R;
+import org.mrstefano.cspm.model.StreamSettings.Type;
 import org.mrstefano.cspm.view.adapter.IconListAdapter;
 
 import android.content.Context;
@@ -33,6 +34,14 @@ public class SoundProfileBuilder {
 		return profile;
 	}
 
+	public static SoundProfile buildCallsOnlyProfile(Context context) {
+		SoundProfile profile = buildProfile(context, 0, false, R.string.calls_only, IconListAdapter.ICON_SILENT);
+		StreamSettings ringerSettings = profile.getStreamSettings(Type.RINGER);
+		ringerSettings.volume = 40;
+		profile.haptickFeedbackEnabled = false;
+		return profile;
+	}
+
 	public static SoundProfile buildDefaultProfile(Context context) {
 		SoundProfile profile = buildProfile(context, 80, false, null, IconListAdapter.ICON_DEFAULT);
 		profile.haptickFeedbackEnabled = true;
@@ -48,18 +57,19 @@ public class SoundProfileBuilder {
 		StreamSettings streamSettings;
 		Uri ringtoneUri = null;
 		int finalVolume = volume;
-		for (Integer streamType : StreamSettings.STREAM_TYPES) {
+		Type[] types = StreamSettings.Type.values();
+		for (Type streamType : types) {
 			switch ( streamType ) {
-			case StreamSettings.RINGER:
+			case RINGER:
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
 				break;
-			case StreamSettings.NOTIFICATION:
+			case NOTIFICATION:
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
 				break;
-			case StreamSettings.ALARM:
+			case ALARM:
 				ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM);
 				break;
-			case StreamSettings.VOICE_CALL:
+			case VOICE_CALL:
 				finalVolume = 80;
 				break;
 			}

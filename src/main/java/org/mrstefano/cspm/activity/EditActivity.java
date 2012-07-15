@@ -1,5 +1,8 @@
 package org.mrstefano.cspm.activity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.mrstefano.cspm.CSPMAppWidgetProvider;
 import org.mrstefano.cspm.R;
 import org.mrstefano.cspm.manager.DataManager;
@@ -8,6 +11,7 @@ import org.mrstefano.cspm.model.IconListItem;
 import org.mrstefano.cspm.model.ProfileValidator;
 import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.StreamSettings;
+import org.mrstefano.cspm.model.StreamSettings.Type;
 import org.mrstefano.cspm.view.EditStreamSettingsView;
 import org.mrstefano.cspm.view.adapter.IconListAdapter;
 
@@ -19,7 +23,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +49,7 @@ public class EditActivity extends Activity {
 	private static final int APPLY_CURRENT_SYSTEM_PROFILE_ID = Menu.FIRST;
 	protected static final int DIALOG_ICON_ID = 0;
 
-	private SparseArray<EditStreamSettingsView> streamSettingViews;
+	private Map<Type, EditStreamSettingsView> streamSettingViews;
 	
 	private Integer index;
 	private SoundProfile profile;
@@ -57,7 +60,7 @@ public class EditActivity extends Activity {
 	private CheckBox hapticFeedbackEnabledCheckBox;
 	private String iconName;
 	private ProfileValidator profileValidator;
-	private Integer currentStreamType;
+	private Type currentStreamType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,6 @@ public class EditActivity extends Activity {
 				profile = new SoundProfile();
 				profile.name = nameText.getText().toString();
 				populateFields();
-				openRingtonePicker(StreamSettings.RINGER);
 			}
 		});
 		
@@ -199,7 +201,7 @@ public class EditActivity extends Activity {
 		if (resultCode == Activity.RESULT_OK && requestCode == ACTIVITY_OPEN_RINGTONE_PICKER) {
           Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
           String ringtoneUri = uri != null ? uri.toString(): null;
-          StreamSettings streamSettings = this.profile.getStreamSettings(currentStreamType);
+          StreamSettings streamSettings = profile.getStreamSettings(currentStreamType);
           streamSettings.ringtoneUri = ringtoneUri;
           EditStreamSettingsView editStreamSettingsView = streamSettingViews.get(currentStreamType);
           editStreamSettingsView.apply(streamSettings);
@@ -217,11 +219,12 @@ public class EditActivity extends Activity {
 	}
 
 	private void initStreamControls() {
-		streamSettingViews = new SparseArray<EditStreamSettingsView>();
+		streamSettingViews = new HashMap<Type, EditStreamSettingsView>();
 		LinearLayout streamControlsContainer = (LinearLayout) findViewById(R.id.stream_controls_container);
-		final int N = StreamSettings.STREAM_TYPES.length;
+		Type[] streamTypes = Type.values();
+		final int N = streamTypes.length;
 		for (int index = 0; index < N; index ++) {
-			final int streamType = StreamSettings.STREAM_TYPES[index];
+			final Type streamType = streamTypes[index];
 			EditStreamSettingsView streamSettingsView = new EditStreamSettingsView(this, streamType);
 			streamSettingsView.selectRingtoneButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View view) {
@@ -242,7 +245,8 @@ public class EditActivity extends Activity {
         	iconView.setImageResource(iconId);
         	hapticFeedbackEnabledCheckBox.setChecked(profile.haptickFeedbackEnabled);
         	
-	        for (int streamType : StreamSettings.STREAM_TYPES) {
+	        Type[] streamTypes = Type.values();
+			for (Type streamType : streamTypes) {
 				EditStreamSettingsView streamSettingsView = streamSettingViews.get(streamType);
 				if ( streamSettingsView != null ) {
 					StreamSettings streamSettings = profile.getStreamSettings(streamType);
@@ -278,20 +282,20 @@ public class EditActivity extends Activity {
         populateFields();
     }
     
-	public void openRingtonePicker(int streamType) {
+	public void openRingtonePicker(Type streamType) {
 		Intent i = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
 		String title = getString(R.string.edit_select_ringtone_popup_title);
 		i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, title );
 		i.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
 		int ringtoneType;
 		switch(streamType) {
-		case StreamSettings.RINGER:
+		case RINGER:
 			ringtoneType = RingtoneManager.TYPE_RINGTONE;
 			break;
-		case StreamSettings.NOTIFICATION:
+		case NOTIFICATION:
 			ringtoneType = RingtoneManager.TYPE_NOTIFICATION;
 			break;
-		case StreamSettings.ALARM:
+		case ALARM:
 			ringtoneType = RingtoneManager.TYPE_ALARM;
 			break;
 		default:
@@ -318,7 +322,8 @@ public class EditActivity extends Activity {
         profile.name = name;
 		profile.icon = iconName;
 		profile.haptickFeedbackEnabled = hapticFeedbackEnabledCheckBox.isChecked();
-        for (int streamType : StreamSettings.STREAM_TYPES) {
+		Type[] streamTypes = Type.values();
+        for (Type streamType : streamTypes) {
 			EditStreamSettingsView streamSettingView = streamSettingViews.get(streamType);
 			if ( streamSettingView != null ) {
 				StreamSettings settings = streamSettingView.extractSettings();

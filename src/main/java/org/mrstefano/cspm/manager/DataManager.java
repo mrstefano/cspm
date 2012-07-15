@@ -53,6 +53,7 @@ public class DataManager {
 		data = new SoundProfilesData();
 		data.addProfile(SoundProfileBuilder.buildSilentProfile(context));
 		data.addProfile(SoundProfileBuilder.buildVibrateProfile(context));
+		data.addProfile(SoundProfileBuilder.buildCallsOnlyProfile(context));
 		data.addProfile(SoundProfileBuilder.buildNormalProfile(context));
 		data.addProfile(SoundProfileBuilder.buildLoudProfile(context));
 		saveData();

@@ -6,6 +6,7 @@ import java.util.List;
 import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.SoundProfilesData;
 import org.mrstefano.cspm.model.StreamSettings;
+import org.mrstefano.cspm.model.StreamSettings.Type;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -30,7 +31,7 @@ public class SoundProfilesDataHandler extends DefaultHandler {
 	private List<SoundProfile> profiles;
 	private SoundProfile profile;
 	private StreamSettings streamSettings;
-	private Integer streamType;
+	private Type streamType;
 
 	@Override
 	public void startElement(String namespaceURI, String localName,
@@ -47,7 +48,12 @@ public class SoundProfilesDataHandler extends DefaultHandler {
 		} else if (localName.equals(STREAM_SETTINGS_EL)) {
 			streamSettings = new StreamSettings();
 		} else if (localName.equals(STREAM_TYPE_EL)) {
-			streamType = extractIntegerValue();
+			Integer streamTypeCode = extractIntegerValue();
+			if ( streamTypeCode != null ) {
+				streamType = Type.valueOf(streamTypeCode);
+			} else {
+				throw new IllegalArgumentException("Null stream code");
+			}
 		}
 	}
 
@@ -68,7 +74,7 @@ public class SoundProfilesDataHandler extends DefaultHandler {
 		} else if (localName.equals(STREAM_SETTINGS_EL)) {
 			profile.putStreamSetting(streamType, streamSettings);
 		} else if (localName.equals(STREAM_TYPE_EL)) {
-			streamType = extractIntegerValue();
+			//do nothing
 		} else if (localName.equals(VOLUME_EL)) {
 			streamSettings.volume = extractIntegerValue();
 		} else if (localName.equals(VIBRATE_EL)) {

@@ -9,6 +9,7 @@ import org.mrstefano.cspm.model.ApplicationStatics;
 import org.mrstefano.cspm.model.SoundProfile;
 import org.mrstefano.cspm.model.SoundProfilesData;
 import org.mrstefano.cspm.model.StreamSettings;
+import org.mrstefano.cspm.model.StreamSettings.Type;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
@@ -41,18 +42,18 @@ public class SoundProfileDataSerializer {
 		valueToElement(serializer, SoundProfilesDataHandler.NAME_EL, sp.name);
 		valueToElement(serializer, SoundProfilesDataHandler.ICON_EL, sp.icon);
 		valueToElement(serializer, SoundProfilesDataHandler.HAPTIC_FEEDBACK_ENABLED_EL, sp.haptickFeedbackEnabled);
-		Set<Integer> streamTypes = sp.getStreamTypes();
-		for (Integer streamType : streamTypes) {
+		Set<Type> streamTypes = sp.getStreamTypes();
+		for (Type streamType : streamTypes) {
 			StreamSettings streamSettings = sp.getStreamSettings(streamType);
 			serialize(serializer, streamType, streamSettings);
 		}
 		serializer.endTag(null, SoundProfilesDataHandler.PROFILE_EL);
 	}
 
-	private void serialize(XmlSerializer serializer, Integer streamType,
+	private void serialize(XmlSerializer serializer, Type streamType,
 			StreamSettings streamSettings) throws IOException {
 		serializer.startTag(null, SoundProfilesDataHandler.STREAM_SETTINGS_EL);
-		valueToElement(serializer, SoundProfilesDataHandler.STREAM_TYPE_EL, streamType);
+		valueToElement(serializer, SoundProfilesDataHandler.STREAM_TYPE_EL, streamType.getCode());
 		valueToElement(serializer, SoundProfilesDataHandler.VOLUME_EL, streamSettings.volume);
 		valueToElement(serializer, SoundProfilesDataHandler.VIBRATE_EL, streamSettings.vibrate);
 		serializer.endTag(null, SoundProfilesDataHandler.STREAM_SETTINGS_EL);

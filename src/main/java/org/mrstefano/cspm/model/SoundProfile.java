@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.mrstefano.cspm.model.StreamSettings.Type;
+
 import android.media.AudioManager;
 
 public class SoundProfile implements Serializable {
@@ -18,22 +20,21 @@ public class SoundProfile implements Serializable {
 	public String name;
 	public String icon;
 	public boolean haptickFeedbackEnabled;
-	private Map<Integer, StreamSettings> streamSettingsMap;
+	private Map<Type, StreamSettings> streamSettingsMap;
 
 	public SoundProfile() {
 		super();
 		haptickFeedbackEnabled = false;
-		streamSettingsMap = new HashMap<Integer, StreamSettings>();
+		streamSettingsMap = new HashMap<Type, StreamSettings>();
 	}
 
-	public void putStreamSetting(Integer streamType,
-			StreamSettings streamSettings) {
+	public void putStreamSetting(Type streamType, StreamSettings streamSettings) {
 		streamSettingsMap.put(streamType, streamSettings);
 	}
 
 	public int getRingerMode() {
-		StreamSettings ringerSettings = getStreamSettings(StreamSettings.RINGER);
-		StreamSettings notificationSettings = getStreamSettings(StreamSettings.NOTIFICATION);
+		StreamSettings ringerSettings = getStreamSettings(Type.RINGER);
+		StreamSettings notificationSettings = getStreamSettings(Type.NOTIFICATION);
 		boolean vibrate = ringerSettings != null && ringerSettings.vibrate || notificationSettings != null && notificationSettings.vibrate;
 		boolean silent = (ringerSettings == null || ringerSettings.volume == 0) && (notificationSettings == null || notificationSettings.volume == 0);
 		int ringerMode;
@@ -47,11 +48,11 @@ public class SoundProfile implements Serializable {
 		return ringerMode;
 	}
 	
-	public StreamSettings getStreamSettings(Integer streamType) {
+	public StreamSettings getStreamSettings(Type streamType) {
 		return streamSettingsMap.get(streamType);
 	}
 
-	public Set<Integer> getStreamTypes() {
+	public Set<Type> getStreamTypes() {
 		return streamSettingsMap.keySet();
 	}
 

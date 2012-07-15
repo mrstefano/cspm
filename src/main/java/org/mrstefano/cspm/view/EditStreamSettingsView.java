@@ -2,6 +2,7 @@ package org.mrstefano.cspm.view;
 
 import org.mrstefano.cspm.R;
 import org.mrstefano.cspm.model.StreamSettings;
+import org.mrstefano.cspm.model.StreamSettings.Type;
 
 import android.content.Context;
 import android.media.Ringtone;
@@ -21,14 +22,14 @@ public class EditStreamSettingsView extends LinearLayout {
 	public SeekBar volumeSeekBar;
 	public CheckBox vibrateCheckBox;
 	public Button selectRingtoneButton;
-	private int streamType;
+	private Type streamType;
 
 	public EditStreamSettingsView(Context context) {
 		super(context);
 		init();
 	}
 
-	public EditStreamSettingsView(Context context, int streamType) {
+	public EditStreamSettingsView(Context context, Type streamType) {
 		super(context);
 		this.streamType = streamType;
 		init();
@@ -45,27 +46,27 @@ public class EditStreamSettingsView extends LinearLayout {
 		int titleResId;
 		boolean vibrateCheckBoxVisible = false, selectableRingtone = false;
 		switch (streamType) {
-		case StreamSettings.RINGER:
+		case RINGER:
 			titleResId = R.string.edit_ringer;
 			vibrateCheckBoxVisible = true;
 			selectableRingtone = true;
 			break;
-		case StreamSettings.NOTIFICATION:
+		case NOTIFICATION:
 			titleResId = R.string.edit_notification;
 			vibrateCheckBoxVisible = true;
 			selectableRingtone = true;
 			break;
-		case StreamSettings.ALARM:
+		case ALARM:
 			titleResId = R.string.edit_alarm;
 			selectableRingtone = true;
 			break;
-		case StreamSettings.MUSIC:
+		case MUSIC:
 			titleResId = R.string.edit_music;
 			break;
-		case StreamSettings.SYSTEM:
+		case SYSTEM:
 			titleResId = R.string.edit_system;
 			break;
-		case StreamSettings.VOICE_CALL:
+		case VOICE_CALL:
 			titleResId = R.string.edit_voice_call;
 			break;
 		default:
