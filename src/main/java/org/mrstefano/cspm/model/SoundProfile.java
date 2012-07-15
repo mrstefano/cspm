@@ -17,10 +17,12 @@ public class SoundProfile implements Serializable {
 	
 	public String name;
 	public String icon;
+	public boolean haptickFeedbackEnabled;
 	private Map<Integer, StreamSettings> streamSettingsMap;
 
 	public SoundProfile() {
 		super();
+		haptickFeedbackEnabled = false;
 		streamSettingsMap = new HashMap<Integer, StreamSettings>();
 	}
 
@@ -57,6 +59,8 @@ public class SoundProfile implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (haptickFeedbackEnabled ? 1231 : 1237);
+		result = prime * result + ((icon == null) ? 0 : icon.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime
 				* result
@@ -74,6 +78,13 @@ public class SoundProfile implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		SoundProfile other = (SoundProfile) obj;
+		if (haptickFeedbackEnabled != other.haptickFeedbackEnabled)
+			return false;
+		if (icon == null) {
+			if (other.icon != null)
+				return false;
+		} else if (!icon.equals(other.icon))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -86,5 +97,7 @@ public class SoundProfile implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 	
 }

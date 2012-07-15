@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,6 +54,7 @@ public class EditActivity extends Activity {
 	private SoundProfileAudioManager audioManager;
 	private EditText nameText;
 	private ImageView iconView;
+	private CheckBox hapticFeedbackEnabledCheckBox;
 	private String iconName;
 	private ProfileValidator profileValidator;
 	private Integer currentStreamType;
@@ -68,7 +70,8 @@ public class EditActivity extends Activity {
 		setContentView(R.layout.profile_edit);
 		setTitle(R.string.edit_title);
 
-		nameText = (EditText) findViewById(R.id.name);
+		nameText = (EditText) findViewById(R.id.profile_edit_name_edit_text);
+		hapticFeedbackEnabledCheckBox = (CheckBox) findViewById(R.id.profile_edit_haptic_feedback_cb);
 		
 		initStreamControls();
 
@@ -80,7 +83,7 @@ public class EditActivity extends Activity {
 	}
 
 	private void initButtons() {
-		iconView = (ImageView) findViewById(R.id.iconView);
+		iconView = (ImageView) findViewById(R.id.profile_edit_icon_iv);
 		iconView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				showDialog(DIALOG_ICON_ID);
@@ -216,7 +219,9 @@ public class EditActivity extends Activity {
 	private void initStreamControls() {
 		streamSettingViews = new SparseArray<EditStreamSettingsView>();
 		LinearLayout streamControlsContainer = (LinearLayout) findViewById(R.id.stream_controls_container);
-		for (final int streamType : StreamSettings.STREAM_TYPES) {
+		final int N = StreamSettings.STREAM_TYPES.length;
+		for (int index = 0; index < N; index ++) {
+			final int streamType = StreamSettings.STREAM_TYPES[index];
 			EditStreamSettingsView streamSettingsView = new EditStreamSettingsView(this, streamType);
 			streamSettingsView.selectRingtoneButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View view) {
@@ -235,6 +240,8 @@ public class EditActivity extends Activity {
 	        iconName = profile.icon;
 	        iconId = IconListAdapter.getIconId(iconName);
         	iconView.setImageResource(iconId);
+        	hapticFeedbackEnabledCheckBox.setChecked(profile.haptickFeedbackEnabled);
+        	
 	        for (int streamType : StreamSettings.STREAM_TYPES) {
 				EditStreamSettingsView streamSettingsView = streamSettingViews.get(streamType);
 				if ( streamSettingsView != null ) {
@@ -310,6 +317,7 @@ public class EditActivity extends Activity {
         String name = nameText.getText().toString();
         profile.name = name;
 		profile.icon = iconName;
+		profile.haptickFeedbackEnabled = hapticFeedbackEnabledCheckBox.isChecked();
         for (int streamType : StreamSettings.STREAM_TYPES) {
 			EditStreamSettingsView streamSettingView = streamSettingViews.get(streamType);
 			if ( streamSettingView != null ) {

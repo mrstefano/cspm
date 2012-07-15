@@ -29,7 +29,9 @@
     <string name="edit_icon_normal">Normal</string>
  	<string name="edit_icon_loud">Loud</string>
     <string name="edit_icon_vibrate">Vibrate</string>
-       
+   	
+   	<string name="edit_haptic_feedback_enabled">Haptic Feedback Enabled</string>
+   	
     <string name="edit_dialog_icon_title">Pick an icon</string>
     
     <string name="edit_vibrate">Vibrate</string>
@@ -49,4 +51,8 @@
     <string name="edit_no_ringtone_selected">No Ringtone Selected</string>
     <string name="edit_select_ringtone">Ringtone</string>
     <string name="edit_select_ringtone_popup_title">Select tone</string>
+    
+    <string name="divider">divider</string>
+    
+    
 </resources>

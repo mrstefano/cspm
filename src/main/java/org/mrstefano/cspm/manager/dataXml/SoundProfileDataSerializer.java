@@ -40,6 +40,7 @@ public class SoundProfileDataSerializer {
 		serializer.startTag(null, SoundProfilesDataHandler.PROFILE_EL);
 		valueToElement(serializer, SoundProfilesDataHandler.NAME_EL, sp.name);
 		valueToElement(serializer, SoundProfilesDataHandler.ICON_EL, sp.icon);
+		valueToElement(serializer, SoundProfilesDataHandler.HAPTIC_FEEDBACK_ENABLED_EL, sp.haptickFeedbackEnabled);
 		Set<Integer> streamTypes = sp.getStreamTypes();
 		for (Integer streamType : streamTypes) {
 			StreamSettings streamSettings = sp.getStreamSettings(streamType);

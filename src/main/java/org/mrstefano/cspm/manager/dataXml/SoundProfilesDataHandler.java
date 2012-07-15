@@ -23,6 +23,7 @@ public class SoundProfilesDataHandler extends DefaultHandler {
 	public static final String VIBRATE_EL = "vibrate";
 	public static final String STREAM_TYPE_EL = "stream_type";
 	public static final String ICON_EL = "icon";
+	public static final String HAPTIC_FEEDBACK_ENABLED_EL = "haptick_feedback_enabled";
 
 	private StringBuffer buffer = new StringBuffer();
 	private SoundProfilesData data;
@@ -62,6 +63,8 @@ public class SoundProfilesDataHandler extends DefaultHandler {
 			profile.name = buffer.toString();
 		} else if (localName.equals(ICON_EL)) {
 			profile.icon = buffer.toString();
+		} else if (localName.equals(HAPTIC_FEEDBACK_ENABLED_EL)) {
+			profile.haptickFeedbackEnabled = Boolean.parseBoolean(buffer.toString());
 		} else if (localName.equals(STREAM_SETTINGS_EL)) {
 			profile.putStreamSetting(streamType, streamSettings);
 		} else if (localName.equals(STREAM_TYPE_EL)) {

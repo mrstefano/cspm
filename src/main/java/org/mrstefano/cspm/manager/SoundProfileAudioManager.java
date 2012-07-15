@@ -7,6 +7,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.provider.Settings.SettingNotFoundException;
+import android.provider.Settings.System;
 
 public class SoundProfileAudioManager {
 
@@ -28,6 +30,7 @@ public class SoundProfileAudioManager {
 				applyStreamSetting(streamType, streamSettings, 0);
 			}
 		}
+    	System.putInt(context.getContentResolver(), System.HAPTIC_FEEDBACK_ENABLED, profile.haptickFeedbackEnabled ? 1: 0);
     }
 	
 	public SoundProfile extractProfileFromCurrentSystemSettings() {
@@ -59,6 +62,11 @@ public class SoundProfileAudioManager {
 			StreamSettings streamSettings = new StreamSettings(volPercent, vibrate, ringtoneUri);
 			profile.putStreamSetting(streamType, streamSettings);
 		}
+		try {
+			int hapticFeedbackEnabledInt = System.getInt(context.getContentResolver(), System.HAPTIC_FEEDBACK_ENABLED);
+			profile.haptickFeedbackEnabled = hapticFeedbackEnabledInt == 1;
+		} catch (SettingNotFoundException e) {}
+		
 		return profile;
 	}
 	

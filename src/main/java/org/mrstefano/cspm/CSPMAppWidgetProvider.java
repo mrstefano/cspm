@@ -83,11 +83,16 @@ public class CSPMAppWidgetProvider extends AppWidgetProvider {
 	    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 	    ComponentName widgetComponentName = new ComponentName(context, CSPMAppWidgetProvider.class);
 		int[] ids = appWidgetManager.getAppWidgetIds(widgetComponentName);
+		if ( ids != null ) {
+			new CSPMAppWidgetProvider().update(context, appWidgetManager, ids, data);
+		}
+		/*
 		Intent updateIntent = new Intent();
 	    updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 	    updateIntent.putExtra(CSPMAppWidgetProvider.WIDGET_IDS_KEY, ids);
 	    updateIntent.putExtra(CSPMAppWidgetProvider.WIDGET_DATA_KEY, data);
 	    context.sendBroadcast(updateIntent);
+	    */
 	}
 
 	public static void updateAllWidgets(Context context) {

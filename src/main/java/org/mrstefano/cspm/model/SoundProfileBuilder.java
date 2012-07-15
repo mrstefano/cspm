@@ -10,23 +10,32 @@ import android.net.Uri;
 public class SoundProfileBuilder {
 
 	public static SoundProfile buildNormalProfile(Context context) {
-		return buildProfile(context, 80, false, R.string.normal, IconListAdapter.ICON_NORMAL);
+		SoundProfile profile = buildProfile(context, 80, false, R.string.normal, IconListAdapter.ICON_NORMAL);
+		profile.haptickFeedbackEnabled = true;
+		return profile;
 	}
 
 	public static SoundProfile buildSilentProfile(Context context) {
-		return buildProfile(context, 0, false, R.string.silent, IconListAdapter.ICON_SILENT);
+		SoundProfile profile = buildProfile(context, 0, false, R.string.silent, IconListAdapter.ICON_SILENT);
+		profile.haptickFeedbackEnabled = false;
+		return profile;
 	}
 
 	public static SoundProfile buildVibrateProfile(Context context) {
-		return buildProfile(context, 0, true, R.string.vibrate, IconListAdapter.ICON_VIBRATE);
+		SoundProfile profile = buildProfile(context, 0, true, R.string.vibrate, IconListAdapter.ICON_VIBRATE);
+		profile.haptickFeedbackEnabled = true;
+		return profile;
 	}
 	
 	public static SoundProfile buildLoudProfile(Context context) {
-		return buildProfile(context, 100, true, R.string.loud, IconListAdapter.ICON_LOUD);
+		SoundProfile profile = buildProfile(context, 100, true, R.string.loud, IconListAdapter.ICON_LOUD);
+		profile.haptickFeedbackEnabled = true;
+		return profile;
 	}
 
 	public static SoundProfile buildDefaultProfile(Context context) {
 		SoundProfile profile = buildProfile(context, 80, false, null, IconListAdapter.ICON_DEFAULT);
+		profile.haptickFeedbackEnabled = true;
 		return profile;
 	}
 	
