@@ -32,12 +32,14 @@ public class SelectActivity extends ListActivity {
 
 	private DataManager dataManager;
 	private SoundProfileAudioManager soundProfileManager;
+	private boolean closeOnSelect;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataManager = DataManager.getInstance(this);
 		soundProfileManager = new SoundProfileAudioManager(this);
+		closeOnSelect = true;
 		
 		setContentView(R.layout.profiles_list);
 		ListView lv = getListView();
@@ -65,6 +67,10 @@ public class SelectActivity extends ListActivity {
 		dataManager.selectProfile(index);
 		SoundProfile profile = dataManager.loadProfile(index);
 		soundProfileManager.applyProfile(profile);
+		if ( closeOnSelect ) {
+			setResult(RESULT_OK);
+			finish();
+		}
 	}
 	
 	@Override
